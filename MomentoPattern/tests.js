@@ -18,6 +18,14 @@ test('setting second state', function() {
 	equal(momento.getSavedState(), "second state");
 });
 
+test('restore state from momento', function() {
+	var originator = new Originator();
+	originator.set("initial state");
+	originator.restoreFromMomento(new Momento("momento state"));
+	var newState = originator.saveToMomento();
+	equal(newState.getSavedState(), "momento state");
+});
+
 function Momento(state) {
 	this.stateToSave = state;
 
@@ -30,6 +38,10 @@ function Originator() {
 	this.state = "";
 	this.set = function(state) {
 		this.state = state;
+	}
+
+	this.restoreFromMomento = function(momento) {
+		this.state = momento.getSavedState();
 	}
 
 	this.saveToMomento = function() {
