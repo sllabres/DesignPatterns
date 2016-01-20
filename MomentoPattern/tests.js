@@ -35,6 +35,18 @@ test('care taker stores first state', function() {
 	equal(originator.saveToMomento().getSavedState(), "first state");
 });
 
+test('care taker handles multiple states and restores second state', function() {
+	var originator = new Originator();
+	var caretaker = new Caretaker();
+	originator.set("first state");
+	caretaker.add(originator.saveToMomento());
+	originator.set("second state");
+	caretaker.add(originator.saveToMomento());
+	originator.set("third state");
+	originator.restoreFromMomento(caretaker.get(1));
+	equal(originator.saveToMomento().getSavedState(), "second state");
+});
+
 test('care taker restores second state', function() {
 	var originator = new Originator();
 	var caretaker = new Caretaker();
