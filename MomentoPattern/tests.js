@@ -26,6 +26,26 @@ test('restore state from momento', function() {
 	equal(newState.getSavedState(), "momento state");
 });
 
+test('care taker stores first state', function() {
+	var originator = new Originator();
+	var caretaker = new Caretaker();
+	originator.set("first state");
+	caretaker.add(originator.saveToMomento());
+	originator.restoreFromMomento(caretaker.get(0));
+	equal(originator.saveToMomento().getSavedState(), "first state");
+});
+
+function Caretaker() {
+	this.momentoList = new Array();
+	this.add = function(momento) {
+		this.momentoList.push(momento);
+	}
+	
+	this.get = function(index) {
+		return this.momentoList[index];
+	}
+}
+
 function Momento(state) {
 	this.stateToSave = state;
 
